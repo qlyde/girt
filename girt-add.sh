@@ -3,7 +3,7 @@
 if [ $# -eq 0 ]; then
     echo "usage: $0 <filenames>"
     exit 1
-elif [ ! -d ".girt" ]; then
+elif [ ! -d .girt ]; then
     echo "$0: error: girt repository directory .girt not found"
     exit 1
 fi
