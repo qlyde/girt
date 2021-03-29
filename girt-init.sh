@@ -1,10 +1,10 @@
 #!/bin/dash
 
 if [ $# -ne 0 ]; then
-    echo "usage: $0" 1>&2
+    echo "usage: girt-init" 1>&2
     exit 1
 elif [ -e .girt ]; then
-    echo "$0: error: .girt already exists" 1>&2
+    echo "girt-init: error: .girt already exists" 1>&2
     exit 1
 fi
 
