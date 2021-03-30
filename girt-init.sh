@@ -10,3 +10,6 @@ fi
 
 mkdir .girt &&
 echo "Initialized empty girt repository in .girt"
+
+touch .girt/index
+mkdir .girt/objects

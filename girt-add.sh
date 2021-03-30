@@ -8,6 +8,7 @@ elif [ ! -d .girt ]; then
     exit 1
 fi
 
+# check files exist and are regular before staging them
 for file in "$@"; do
     if [ ! -e "$file" ]; then
         echo "$0: error: can not open '$file'" 1>&2
@@ -18,4 +19,15 @@ for file in "$@"; do
     fi
 done
 
+# create index file if user removed it
+[ -e .girt/index ] || touch .girt/index
 
+# append "mode filename hash" to index
+for file in "$@"; do
+    # remove file from index if it exists
+    sed -i "/^$file /d" .girt/index
+
+    permissions=$(stat -c '%A' "$file" | cut -c2) # reference only cares about user's read permissions
+    hash=$(cat -A "$file" | sha1sum | cut -d' ' -f1)
+    echo "$file $permissions $hash" >> .girt/index
+done
