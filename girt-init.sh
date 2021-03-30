@@ -11,5 +11,18 @@ fi
 mkdir .girt &&
 echo "Initialized empty girt repository in .girt"
 
+# store current branch
+touch .girt/HEAD
+
+# store staged changes
 touch .girt/index
+
+# store objects: blobs (files), trees (snapshot of files), commits
 mkdir .girt/objects
+mkdir .girt/objects/blobs
+mkdir .girt/objects/trees
+mkdir .girt/objects/commits
+
+# store branches as pointers to commits
+mkdir .girt/refs
+mkdir .girt/refs/heads
