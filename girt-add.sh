@@ -25,9 +25,9 @@ done
 # append "mode filename hash" to index
 for file in "$@"; do
     # remove file from index if it exists
-    sed -i "/^$file /d" .girt/index
+    sed -i "/^$file /d" .girt/index # ASSUME $file has no breaking characters
 
-    permissions=$(stat -c '%A' "$file" | cut -c2) # reference only cares about user's read permissions
-    hash=$(cat -A "$file" | sha1sum | cut -d' ' -f1)
+    permissions=$(stat -c'%A' -- "$file" | cut -c2) # reference only cares about user's read permissions
+    hash=$(cat -A -- "$file" | sha1sum | cut -d' ' -f1)
     echo "$file $permissions $hash" >> .girt/index
 done
