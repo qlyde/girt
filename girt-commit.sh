@@ -2,6 +2,11 @@
 
 usage() { echo "usage: $0 [-a] -m commit-message" 1>&2; exit 1; }
 
+if [ ! -d .girt ]; then
+    echo "$0: error: girt repository directory .girt not found" 1>&2
+    exit 1
+fi
+
 while [ $# -gt 0 ]; do
     arg=$1
     case "$arg" in
@@ -20,11 +25,6 @@ while [ $# -gt 0 ]; do
     esac
 done
 [ -n "$flag_m" ] || usage # -m is compulsory
-
-if [ ! -d .girt ]; then
-    echo "$0: error: girt repository directory .girt not found" 1>&2
-    exit 1
-fi
 
 # check if there is anything to commit
 if [ ! -s .girt/index -a ! -s .girt/rmindex ]; then
