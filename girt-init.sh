@@ -12,7 +12,7 @@ mkdir .girt &&
 echo "Initialized empty girt repository in .girt"
 
 # store current branch
-touch .girt/HEAD
+echo "refs/heads/master" > .girt/HEAD
 
 # store staged changes
 touch .girt/index
@@ -26,3 +26,4 @@ mkdir .girt/objects/commits
 # store branches as pointers to commits
 mkdir .girt/refs
 mkdir .girt/refs/heads
+touch .girt/refs/heads/master # default branch
