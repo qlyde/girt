@@ -19,9 +19,6 @@ for file in "$@"; do
     fi
 done
 
-# create index file if user removed it
-[ -e .girt/index ] || touch .girt/index
-
 for file in "$@"; do
     mode=$(stat -c'%a' -- "$file")
     hash=$(sha1sum -- "$file" | cut -d' ' -f1)
