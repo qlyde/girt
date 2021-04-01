@@ -9,6 +9,6 @@ elif [ ! -d .girt ]; then
 fi
 
 for commit in .girt/objects/commits/*; do
-    message=$(cat -- "$commit" | grep '^message:' | sed s/^message://)
+    message=$(cat -- "$commit" | grep '^message:' | sed 's/^message://')
     echo "$(basename -- "$commit")" "$message"
 done
