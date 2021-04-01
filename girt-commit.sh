@@ -1,19 +1,25 @@
 #!/bin/dash
 
-# usage() { echo "usage: $0 [-a] -m commit-message" 1>&2; exit 1; }
+usage() { echo "usage: $0 [-a] -m commit-message" 1>&2; exit 1; }
 
-# while [ $# -gt 0 ]; do
-#     arg=$1
-#     case "$arg" in
-#         -a)
-#             shift
-#             ;;
-#         -m)
-#             shift 2
-#             ;;
-#         *) usage;;
-#     esac
-# done
+while [ $# -gt 0 ]; do
+    arg=$1
+    case "$arg" in
+        -a)
+            flag_a=true
+            shift
+            ;;
+        -m)
+            flag_m=true
+            message="$2"
+            [ -n "$message" ] || usage # option argument not given
+            [ "$(echo "$message" | cut -c1)" = "-" ] && usage # option argument invalid
+            shift 2
+            ;;
+        *) usage;;
+    esac
+done
+[ -n "$flag_m" ] || usage # -m is compulsory
 
 if [ ! -d .girt ]; then
     echo "$0: error: girt repository directory .girt not found" 1>&2
