@@ -42,6 +42,7 @@ for file in "$@"; do
             parent_tree_file=$(echo "$line" | cut -d'/' -f1)
             if [ "$file" = "$parent_tree_file" ]; then
                 # file doesn't exist but exists in latest commit tree so add to rmindex
+                sed -i "/^$file$/d" .girt/rmindex
                 echo "$file" >> .girt/rmindex
             fi
         done < ".girt/objects/trees/$parent_tree"
@@ -49,13 +50,8 @@ for file in "$@"; do
         mode=$(stat -c'%a' -- "$file")
         hash=$(sha1sum -- "$file" | cut -d' ' -f1)
 
-        # remove file from index if it exists
-        sed -i "/^$file\//d" .girt/index
-
-        # append to index
-        echo "$file/$mode/$hash" >> .girt/index
-
-        # create blob
-        gzip -c -- "$file" > ".girt/objects/blobs/$hash"
+        sed -i "/^$file\//d" .girt/index # remove file from index if it exists
+        echo "$file/$mode/$hash" >> .girt/index # append to index
+        gzip -c -- "$file" > ".girt/objects/blobs/$hash" # create blob
     fi
 done
