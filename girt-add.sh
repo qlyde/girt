@@ -22,12 +22,16 @@ done
 # create index file if user removed it
 [ -e .girt/index ] || touch .girt/index
 
-# append "mode filename hash" to index
 for file in "$@"; do
-    # remove file from index if it exists
-    sed -i "/^$file /d" .girt/index # ASSUME $file has no breaking characters
+    mode=$(stat -c'%A' -- "$file" | cut -c2) # the reference implementation only cares about user's read permissions
+    hash=$(sha1sum -- "$file" | cut -d' ' -f1)
 
-    permissions=$(stat -c'%A' -- "$file" | cut -c2) # reference only cares about user's read permissions
-    hash=$(cat -A -- "$file" | sha1sum | cut -d' ' -f1)
-    echo "$file $permissions $hash" >> .girt/index
+    # remove file from index if it exists
+    sed -i "/^$file\//d" .girt/index
+
+    # append to index
+    echo "$file/$mode/$hash" >> .girt/index
+
+    # create blob
+    gzip -c -- "$file" > ".girt/objects/blobs/$hash"
 done
