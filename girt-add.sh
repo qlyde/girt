@@ -23,7 +23,7 @@ done
 [ -e .girt/index ] || touch .girt/index
 
 for file in "$@"; do
-    mode=$(stat -c'%A' -- "$file" | cut -c2) # the reference implementation only cares about user's read permissions
+    mode=$(stat -c'%a' -- "$file")
     hash=$(sha1sum -- "$file" | cut -d' ' -f1)
 
     # remove file from index if it exists
