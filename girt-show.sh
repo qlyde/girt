@@ -28,34 +28,27 @@ if [ -n "$commit" -a ! -e ".girt/objects/commits/$commit" ]; then
 fi
 
 if [ -n "$commit" ]; then
-    # loop over files in the given commit
     tree=$(cat ".girt/objects/commits/$commit" | grep '^tree:' | sed 's/^tree://')
-    while IFS= read -r line; do
-        file=$(echo "$line" | cut -f1)
-        if [ "$file" = "$filename" ]; then
-            blob=$(echo "$line" | cut -f3)
-        fi
-    done < ".girt/objects/trees/$tree"
-
-    # check if file exists in the given commit
-    if [ -z "$blob" ]; then
-        echo "$0: error: '$filename' not found in commit $commit" 1>&2
-        exit 1
-    fi
+    path=".girt/objects/trees/$tree"
+    error="$0: error: '$filename' not found in commit $commit"
 else
-    # loop over files in the index
-    while IFS= read -r line; do
-        file=$(echo "$line" | cut -f1)
-        if [ "$file" = "$filename" ]; then
-            blob=$(echo "$line" | cut -f3)
-        fi
-    done < ".girt/index"
+    path=".girt/index"
+    error="$0: error: '$filename' not found in index"
+fi
 
-    # check if file exists in the index
-    if [ -z "$blob" ]; then
-        echo "$0: error: '$filename' not found in index" 1>&2
-        exit 1
+# find file from path
+while IFS= read -r line; do
+    file=$(echo "$line" | cut -f1)
+    if [ "$file" = "$filename" ]; then
+        blob=$(echo "$line" | cut -f3)
+        break
     fi
+done < "$path"
+
+# check if file exists
+if [ -z "$blob" ]; then
+    echo "$error" 1>&2
+    exit 1
 fi
 
 # print blob contents
