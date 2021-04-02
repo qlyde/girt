@@ -30,7 +30,7 @@ done
 if [ -n "$flag_a" ]; then
     while IFS= read -r line; do
         file=$(echo "$line" | cut -f1)
-        girt-add.sh "$file"
+        girt-add "$file"
     done < ".girt/index"
 fi
 
@@ -50,7 +50,6 @@ elif [ -z "$parent_commit" ] && [ ! -s .girt/index ]; then
 fi
 
 # create tree
-tree=$(cat .girt/index)
 tree_hash=$(sha1sum .girt/index | cut -d' ' -f1)
 cp .girt/index ".girt/objects/trees/$tree_hash"
 
