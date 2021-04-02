@@ -43,10 +43,9 @@ tree_hash=$(sha1sum .girt/index | cut -d' ' -f1)
 cp .girt/index ".girt/objects/trees/$tree_hash"
 
 # create commit
-commit="tree:$tree_hash\nparent:$parent_commit\nmessage:$message"
 commit_num=0
 while [ -e ".girt/objects/commits/$commit_num" ]; do commit_num=$((commit_num+1)); done
-echo "$commit" > ".girt/objects/commits/$commit_num"
+printf "tree:%s\nparent:%s\nmessage:%s" "$tree_hash" "$parent_commit" "$message" > ".girt/objects/commits/$commit_num"
 echo "Committed as commit $commit_num"
 
 # update branch pointer
