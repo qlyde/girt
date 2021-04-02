@@ -7,6 +7,9 @@ if [ ! -d .girt ]; then
     exit 1
 fi
 
+# parse arguments
+flag_a=
+flag_m=
 while [ $# -gt 0 ]; do
     arg="$1"
     case "$arg" in
@@ -56,7 +59,7 @@ cp .girt/index ".girt/objects/trees/$tree_hash"
 # create commit
 commit_num=0
 while [ -e ".girt/objects/commits/$commit_num" ]; do commit_num=$((commit_num+1)); done
-printf "tree:%s\nparent:%s\nmessage:%s" "$tree_hash" "$parent_commit" "$message" > ".girt/objects/commits/$commit_num"
+printf "parent:%s\ntree:%s\nmessage:%s\n" "$parent_commit" "$tree_hash" "$message" > ".girt/objects/commits/$commit_num"
 echo "Committed as commit $commit_num"
 
 # update branch pointer
