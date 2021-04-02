@@ -26,6 +26,14 @@ while [ $# -gt 0 ]; do
 done
 [ -z "$flag_m" ] && usage # -m is compulsory
 
+# process -a flag if given
+if [ -n "$flag_a" ]; then
+    while IFS= read -r line; do
+        file=$(echo "$line" | cut -f1)
+        girt-add.sh "$file"
+    done < ".girt/index"
+fi
+
 # check if there is anything to commit
 head=$(cat .girt/HEAD)
 parent_commit=$(cat ".girt/$head")
@@ -35,6 +43,10 @@ if [ -n "$parent_commit" ]; then
         echo "nothing to commit"
         exit 0
     fi
+elif [ -z "$parent_commit" ] && [ ! -s .girt/index ]; then
+    # no parent commit and empty index
+    echo "nothing to commit"
+    exit 0
 fi
 
 # create tree
