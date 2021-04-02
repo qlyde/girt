@@ -9,7 +9,7 @@ elif [ $# -ne 0 ]; then
 fi
 
 for commit in .girt/objects/commits/*; do
-    [ -f "$commit" ] || continue
+    [ -f "$commit" ] || continue # in case glob doesn't match
     message=$(cat -- "$commit" | grep '^message:' | sed 's/^message://')
     printf "%s %s\n" "$(basename -- "$commit")" "$message"
 done | sort -nr
