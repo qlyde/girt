@@ -9,6 +9,7 @@ elif [ $# -ne 0 ]; then
 fi
 
 for commit in .girt/objects/commits/*; do
+    [ -f "$commit" ] || continue
     message=$(cat -- "$commit" | grep '^message:' | sed 's/^message://')
-    echo "$(basename -- "$commit")" "$message"
-done
+    printf "%s %s\n" "$(basename -- "$commit")" "$message"
+done | tac

@@ -17,45 +17,33 @@ while [ $# -gt 0 ]; do
         -m)
             flag_m=true
             message="$2"
-            [ -n "$message" ] || usage # option argument not given
+            [ -z "$message" ] && usage # option argument not given
             [ "$(echo "$message" | cut -c1)" = "-" ] && usage # option argument invalid
             shift 2
             ;;
         *) usage;;
     esac
 done
-[ -n "$flag_m" ] || usage # -m is compulsory
+[ -z "$flag_m" ] && usage # -m is compulsory
 
 # check if there is anything to commit
-if [ ! -s .girt/index -a ! -s .girt/rmindex ]; then
-    echo "nothing to commit"
-    exit 0
+head=$(cat .girt/HEAD)
+parent_commit=$(cat ".girt/$head")
+if [ -n "$parent_commit" ]; then
+    parent_tree=$(cat ".girt/objects/commits/$parent_commit" | grep '^tree:' | sed 's/^tree://')
+    if diff .girt/index ".girt/objects/trees/$parent_tree" > /dev/null 2>&1; then
+        echo "nothing to commit"
+        exit 0
+    fi
 fi
 
 # create tree
-head=$(cat .girt/HEAD)
-parent_commit=$(cat ".girt/$head")
 tree=$(cat .girt/index)
-if [ -n "$parent_commit" ]; then
-    # add unchanged files to tree from parent commit, if parent exists
-    parent_tree=$(cat ".girt/objects/commits/$parent_commit" | grep '^tree:' | sed 's/^tree://')
-    while IFS= read -r line; do
-        file=$(echo "$line" | cut -d'/' -f1)
-        if ! echo "$tree" | grep -q "^$file/"; then
-            tree="$tree\n$line"
-        fi
-    done < ".girt/objects/trees/$parent_tree"
-fi
-
-while IFS= read -r file; do
-    tree=$(echo -n "$tree" | sed "/^$file\//d")
-done < ".girt/rmindex"
-tree_hash=$(echo "$tree" | sha1sum | cut -d' ' -f1)
-echo "$tree" > ".girt/objects/trees/$tree_hash"
+tree_hash=$(sha1sum .girt/index | cut -d' ' -f1)
+cp .girt/index ".girt/objects/trees/$tree_hash"
 
 # create commit
 commit="tree:$tree_hash\nparent:$parent_commit\nmessage:$message"
-
 commit_num=0
 while [ -e ".girt/objects/commits/$commit_num" ]; do commit_num=$((commit_num+1)); done
 echo "$commit" > ".girt/objects/commits/$commit_num"
@@ -63,7 +51,3 @@ echo "Committed as commit $commit_num"
 
 # update branch pointer
 echo "$commit_num" > ".girt/$head"
-
-# reset index
-echo -n > .girt/index
-echo -n > .girt/rmindex

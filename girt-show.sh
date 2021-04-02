@@ -1,8 +1,9 @@
 #!/bin/dash
 
+usage() { echo "$0: error: girt repository directory .girt not found" 1>&2; exit 1; }
+
 if [ ! -d .girt ]; then
-    echo "$0: error: girt repository directory .girt not found" 1>&2
-    exit 1
+    usage
 elif [ $# -ne 1 ]; then
     echo "usage: $0 <commit>:<filename>" 1>&2
     exit 1
@@ -17,8 +18,7 @@ if echo "$1" | grep -q ':'; then
         exit 1
     fi
 else
-    echo "usage: $0 <commit>:<filename>" 1>&2
-    exit 1
+    usage
 fi
 
 # check if commit exists if given
@@ -31,9 +31,9 @@ if [ -n "$commit" ]; then
     # loop over files in the given commit
     tree=$(cat ".girt/objects/commits/$commit" | grep '^tree:' | sed 's/^tree://')
     while IFS= read -r line; do
-        file=$(echo "$line" | cut -d'/' -f1)
+        file=$(echo "$line" | cut -f1)
         if [ "$file" = "$filename" ]; then
-            blob=$(echo "$line" | cut -d'/' -f3)
+            blob=$(echo "$line" | cut -f3)
         fi
     done < ".girt/objects/trees/$tree"
 
@@ -45,9 +45,9 @@ if [ -n "$commit" ]; then
 else
     # loop over files in the index
     while IFS= read -r line; do
-        file=$(echo "$line" | cut -d'/' -f1)
+        file=$(echo "$line" | cut -f1)
         if [ "$file" = "$filename" ]; then
-            blob=$(echo "$line" | cut -d'/' -f3)
+            blob=$(echo "$line" | cut -f3)
         fi
     done < ".girt/index"
 

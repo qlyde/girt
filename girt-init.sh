@@ -16,7 +16,6 @@ echo "refs/heads/master" > .girt/HEAD
 
 # store staged changes
 touch .girt/index
-touch .girt/rmindex
 
 # store objects: blobs (files), trees (snapshot of files), commits
 mkdir .girt/objects
