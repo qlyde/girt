@@ -21,21 +21,18 @@ for file in "$@"; do
 done
 
 # girt-add each file
+# file is guaranteed to be a regular file, or not exist in cwd but exist in index
 for file in "$@"; do
     escaped_file=$(echo "$file" | sed 's:[]\[^$.*/]:\\&:g')
+    sed -i "/^$escaped_file$(printf '\t')/d" .girt/index # remove file from index if it exists
 
-    # check if file removed
-    if [ ! -e "$file" ] && cat .girt/index | cut -f1 | grep -Fqx -- "$file"; then
-        sed -i "/^$escaped_file\s/d" .girt/index
-        continue
+    if [ -e "$file" ]; then
+        mode=$(stat -c'%a' -- "$file")
+        hash=$(sha1sum -- "$file" | cut -d' ' -f1)
+
+        printf "%s\t%s\t%s\n" "$file" "$mode" "$hash" >> .girt/index # append to index
+        sort -o .girt/index .girt/index
+
+        gzip -c -- "$file" > ".girt/objects/blobs/$hash" # create blob
     fi
-
-    mode=$(stat -c'%a' -- "$file")
-    hash=$(sha1sum -- "$file" | cut -d' ' -f1)
-
-    sed -i "/^$escaped_file\s/d" .girt/index # remove file from index if it exists
-    printf "%s\t%s\t%s\n" "$file" "$mode" "$hash" >> .girt/index # append to index
-    sort -o .girt/index .girt/index
-
-    gzip -c -- "$file" > ".girt/objects/blobs/$hash" # create blob
 done
