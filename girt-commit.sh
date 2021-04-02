@@ -16,7 +16,7 @@ while [ $# -gt 0 ]; do
             ;;
         -m)
             flag_m=true
-            message="$2"
+            message=$2
             [ -z "$message" ] && usage # option argument not given
             [ "$(echo "$message" | cut -c1)" = "-" ] && usage # option argument invalid
             shift 2
