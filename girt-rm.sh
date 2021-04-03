@@ -64,7 +64,7 @@ for file in "$@"; do
         repo_blob=$(cat .girt/objects/trees/$parent_tree | sed -n "/^$escaped_file$(printf '\t')/p" | cut -f3)
     fi
 
-    # note index_blob cannot be null here
+    # check for errors
     if [ -z "$index_blob" ]; then
         # 'file' is not in the girt repository
         echo "$0: error: '$file' is not in the girt repository" 1>&2
@@ -89,7 +89,7 @@ done
 
 # girt-rm each file
 for file in "$@"; do
-    # remove file
+    # remove file if it exists and --cached not specified
     if [ -f "$file" -a -z "$flag_cached" ]; then
         rm "$file"
     fi
