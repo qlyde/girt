@@ -34,7 +34,7 @@ if [ -n "$flag_a" ]; then
     while IFS= read -r line; do
         file=$(echo "$line" | cut -f1)
         girt-add "$file"
-    done < ".girt/index"
+    done < .girt/index
 fi
 
 # check if there is anything to commit
