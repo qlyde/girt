@@ -16,9 +16,9 @@ fi
 if [ $# -eq 0 ]; then
     # list branches
     for branch in .girt/refs/heads/*; do
-        printf "%s\n" "$branch"
+        printf "%s\n" "$(basename -- "$branch")"
     done | sort
-elif [ $# -eq 1]; then
+elif [ $# -eq 1 ]; then
     [ "$(echo "$1" | cut -c1)" = "-" ] && usage # argument invalid
 
     # check if branch already exists
