@@ -64,7 +64,7 @@ process_file() {
         printf "%s - file deleted\n" "$file"
     elif [ -z "$working_blob" -a "$index_blob" != "$repo_blob" ]; then
         printf "%s - file deleted, different changes staged for commit\n" "$file"
-    # 0 blos are null
+    # 0 blobs are null
     elif [ "$working_blob" = "$index_blob" -a "$index_blob" = "$repo_blob" ]; then
         printf "%s - same as repo\n" "$file"
     elif [ "$working_blob" = "$index_blob" -a "$index_blob" != "$repo_blob" ]; then
@@ -85,7 +85,9 @@ done >> "$TMP"
 # process files in index
 while IFS= read -r line; do
     file=$(echo "$line" | cut -f1)
-    process_file "$file"
+    if ! grep -Fq -- "$file -" "$TMP"; then # hasn't already been processed
+        process_file "$file"
+    fi
 done < .girt/index >> "$TMP"
 
 # process files in repo
@@ -95,9 +97,11 @@ if [ -n "$parent_commit" ]; then
     parent_tree=$(cat ".girt/objects/commits/$parent_commit" | grep '^tree:' | sed 's/^tree://')
     while IFS= read -r line; do
         file=$(echo "$line" | cut -f1)
-        process_file "$file"
+        if ! grep -Fq -- "$file -" "$TMP"; then # hasn't already been processed
+            process_file "$file"
+        fi
     done < ".girt/objects/trees/$parent_tree" >> "$TMP"
 fi
 
 # print status
-cat "$TMP" | sort | uniq
+cat "$TMP" | sort
