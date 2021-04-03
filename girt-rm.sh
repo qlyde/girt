@@ -91,7 +91,7 @@ done
 for file in "$@"; do
     # remove file if it exists and --cached not specified
     if [ -f "$file" -a -z "$flag_cached" ]; then
-        rm "$file"
+        rm -- "$file"
     fi
 
     # remove file from index
