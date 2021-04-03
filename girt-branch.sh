@@ -47,5 +47,16 @@ else # $# = 2
         exit 1
     fi
 
+    # check if branch has unmerged changes
+    # ie. changes in target branch are not merged into the current branch
+    # eg. current branch 3 -> 2 -> 1 -> 0
+    # eg. target branch 4 -> 3 -> 2 -> 1 -> 0 (unmerged) vs 2 -> 1 -> 0 (merged)
+    curr_commit=$(cat ".girt/refs/heads/$curr_branch")
+    branch_commit=$(cat ".girt/refs/heads/$branch")
+
+    # check if branch_commit appears in current branch commit chain
+
     # delete branch
+    # rm ".girt/refs/heads/$branch"
+    echo "Deleted branch '$branch'"
 fi

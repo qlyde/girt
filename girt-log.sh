@@ -8,8 +8,11 @@ elif [ $# -ne 0 ]; then
     exit 1
 fi
 
-for commit in .girt/objects/commits/*; do
-    [ -f "$commit" ] || continue # in case glob doesn't match
-    message=$(cat -- "$commit" | grep '^message:' | sed 's/^message://')
-    printf "%s %s\n" "$(basename -- "$commit")" "$message"
-done | sort -nr
+head=$(cat .girt/HEAD)
+curr_commit=$(cat ".girt/$head")
+while [ -n "$curr_commit" ]; do
+    parent=$(cat ".girt/objects/commits/$curr_commit" | grep '^parent:' | sed 's/^parent://')
+    message=$(cat ".girt/objects/commits/$curr_commit" | grep '^message:' | sed 's/^message://')
+    printf "%s %s\n" "$curr_commit" "$message"
+    curr_commit="$parent"
+done
