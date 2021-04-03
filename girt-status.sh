@@ -41,9 +41,9 @@ process_file() {
 
     # get repo blob
     local head=$(cat .girt/HEAD)
-    local parent_commit=$(cat ".girt/$head")
-    if [ -n "$parent_commit" ]; then
-        local parent_tree=$(cat ".girt/objects/commits/$parent_commit" | grep '^tree:' | sed 's/^tree://')
+    local curr_commit=$(cat ".girt/$head")
+    if [ -n "$curr_commit" ]; then
+        local parent_tree=$(cat ".girt/objects/commits/$curr_commit" | grep '^tree:' | sed 's/^tree://')
         repo_blob=$(cat .girt/objects/trees/$parent_tree | sed -n "/^$escaped_file$(printf '\t')/p" | cut -f3)
     fi
 
@@ -92,9 +92,9 @@ done < .girt/index >> "$TMP"
 
 # process files in repo
 head=$(cat .girt/HEAD)
-parent_commit=$(cat ".girt/$head")
-if [ -n "$parent_commit" ]; then
-    parent_tree=$(cat ".girt/objects/commits/$parent_commit" | grep '^tree:' | sed 's/^tree://')
+curr_commit=$(cat ".girt/$head")
+if [ -n "$curr_commit" ]; then
+    parent_tree=$(cat ".girt/objects/commits/$curr_commit" | grep '^tree:' | sed 's/^tree://')
     while IFS= read -r line; do
         file=$(echo "$line" | cut -f1)
         if ! grep -Fq -- "$file -" "$TMP"; then # hasn't already been processed

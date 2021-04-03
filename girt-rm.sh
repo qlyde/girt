@@ -58,9 +58,9 @@ for file in "$@"; do
 
     # get repo blob
     head=$(cat .girt/HEAD)
-    parent_commit=$(cat ".girt/$head")
-    if [ -n "$parent_commit" ]; then
-        parent_tree=$(cat ".girt/objects/commits/$parent_commit" | grep '^tree:' | sed 's/^tree://')
+    curr_commit=$(cat ".girt/$head")
+    if [ -n "$curr_commit" ]; then
+        parent_tree=$(cat ".girt/objects/commits/$curr_commit" | grep '^tree:' | sed 's/^tree://')
         repo_blob=$(cat .girt/objects/trees/$parent_tree | sed -n "/^$escaped_file$(printf '\t')/p" | cut -f3)
     fi
 
