@@ -52,11 +52,20 @@ else # $# = 2
     # eg. current branch 3 -> 2 -> 1 -> 0
     # eg. target branch 4 -> 3 -> 2 -> 1 -> 0 (unmerged) vs 2 -> 1 -> 0 (merged)
     curr_commit=$(cat ".girt/refs/heads/$curr_branch")
-    branch_commit=$(cat ".girt/refs/heads/$branch")
+    target_commit=$(cat ".girt/refs/heads/$branch")
 
-    # check if branch_commit appears in current branch commit chain
+    # check if target_commit appears in current branch commit chain
+    merged=
+    while [ -n "$curr_commit" ]; do
+        [ "$curr_commit" = "$target_commit" ] && merged=true
+        curr_commit=$(cat ".girt/objects/commits/$curr_commit" | grep '^parent:' | sed 's/^parent://')
+    done
+    if [ -z "$merged" ]; then
+        echo "$0: error: branch '$branch' has unmerged changes" 1>&2
+        exit 1
+    fi
 
     # delete branch
-    # rm ".girt/refs/heads/$branch"
+    rm ".girt/refs/heads/$branch"
     echo "Deleted branch '$branch'"
 fi
