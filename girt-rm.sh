@@ -60,8 +60,8 @@ for file in "$@"; do
     head=$(cat .girt/HEAD)
     curr_commit=$(cat ".girt/$head")
     if [ -n "$curr_commit" ]; then
-        parent_tree=$(cat ".girt/objects/commits/$curr_commit" | grep '^tree:' | sed 's/^tree://')
-        repo_blob=$(cat .girt/objects/trees/$parent_tree | sed -n "/^$escaped_file$(printf '\t')/p" | cut -f3)
+        curr_tree=$(cat ".girt/objects/commits/$curr_commit" | grep '^tree:' | sed 's/^tree://')
+        repo_blob=$(cat .girt/objects/trees/$curr_tree | sed -n "/^$escaped_file$(printf '\t')/p" | cut -f3)
     fi
 
     # check for errors
