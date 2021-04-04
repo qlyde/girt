@@ -12,6 +12,9 @@ elif [ $# -ne 1 -o "$(echo "$1" | cut -c1)" = "-" ]; then
 elif [ ! -e ".girt/refs/heads/$1" ]; then
     echo "$0: error: unknown branch '$1'" 1>&2
     exit 1
+elif [ "$(basename -- $(cat .girt/HEAD))" = "$1" ]; then
+    echo "Already on '$1'"
+    exit 0
 fi
 
 branch="$1"
@@ -26,21 +29,30 @@ curr_tree=$(cat ".girt/objects/commits/$curr_commit" | grep '^tree:' | sed 's/^t
 error=
 for file in *; do # if file was removed, it does not count as 'losing work'
     [ -f "$file" ] || continue
-
     escaped_file=$(echo "$file" | sed 's:[]\[^$.*/]:\\&:g')
 
+    working_blob=$(sha1sum -- "$file" | cut -d' ' -f1)
     index_blob=$(cat .girt/index | sed -n "/^$escaped_file$(printf '\t')/p" | cut -f3) # can be null if untracked
+    repo_blob=$(cat .girt/objects/trees/$curr_tree | sed -n "/^$escaped_file$(printf '\t')/p" | cut -f3)
+
     branch_blob=$(cat ".girt/objects/trees/$branch_tree" | sed -n "/^$escaped_file$(printf '\t')/p" | cut -f3) # can be null
 
-    if [ "$index_blob" != "$branch_blob" ]; then
-        # file in current branch is different to target branch so it requires modification/removal
-        # check that working file is the same as the index file (ie. changes are staged)
-        working_blob=$(sha1sum -- "$file" | cut -d' ' -f1)
-        if [ "$working_blob" != "$index_blob" ]; then
-            error=true
-            error_files=$(printf "%s\n%s" "$error_files" "$file")
-            # will be sorted since index is sorted
-        fi
+    flag=
+    if [ "$repo_blob" != "$branch_blob" ]; then
+        # check for unstaged changes
+        [ "$working_blob" != "$index_blob" -a "$index_blob" = "$repo_blob" ] && flag=true
+
+        # check for different staged changes different to branch_blob
+        [ "$working_blob" != "$index_blob" -a "$index_blob" != "$repo_blob" -a "$index_blob" != "$branch_blob" ] && flag=true
+
+        # check for staged changes different to branch_blob
+        [ "$working_blob" = "$index_blob" -a "$index_blob" != "$repo_blob" -a "$working_blob" != "$branch_blob" ] && flag=true;
+    fi
+
+    if [ -n "$flag" ]; then
+        error=true
+        error_files=$(printf "%s\n%s" "$error_files" "$file")
+        # will be sorted since index is sorted
     fi
 done
 
@@ -55,12 +67,12 @@ while IFS= read -r line; do
     escaped_file=$(echo "$file" | sed 's:[]\[^$.*/]:\\&:g')
 
     index_blob=$(echo "$line" | cut -f3)
-    branch_blob=$(cat ".girt/objects/trees/$branch_tree" | sed -n "/^$escaped_file$(printf '\t')/p" | cut -f3)
     repo_blob=$(cat .girt/objects/trees/$curr_tree | sed -n "/^$escaped_file$(printf '\t')/p" | cut -f3)
+
+    branch_blob=$(cat ".girt/objects/trees/$branch_tree" | sed -n "/^$escaped_file$(printf '\t')/p" | cut -f3)
 
     if [ "$index_blob" = "$repo_blob" -a "$index_blob" != "$branch_blob" -a -n "$branch_blob" ]; then
         # only modify file if change is commited, ie. index_blob = repo_blob, otherwise keep untracked/staged changes
-        # working_blob is guaranteed to be same as index_blob otherwise an error would have been raised
         # since index_blob is committed, change index entry to be branch entry
         escaped_line=$(echo "$line" | sed 's:[]\[^$.*/]:\\&:g')
         sed -i "/^$escaped_line$/s/$index_blob/$branch_blob/" .girt/index # no need to escape blobs, they are hexadecimal
