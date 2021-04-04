@@ -15,9 +15,7 @@ fi
 # parse arguments
 if [ $# -eq 0 ]; then
     # list branches
-    for branch in .girt/refs/heads/*; do
-        printf "%s\n" "$(basename -- "$branch")"
-    done | sort
+    ls -1 .girt/refs/heads | sort
 elif [ $# -eq 1 ]; then
     [ "$(echo "$1" | cut -c1)" = "-" ] && usage # argument invalid
 
