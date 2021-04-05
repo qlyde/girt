@@ -1,0 +1,70 @@
+Diary
+James Kroeger
+
+Tue Mar 30 00:05:00 to 00:43:05 started girt-init, does not create files in .girt/ yet
+Tue Mar 30 00:43:05 to 01:38:14 start girt-add error checking only
+Tue Mar 30 02:00:00 to 02:52:40 refactor
+Tue Mar 30 02:52:40 to 03:00:32 redirect error messages to stderr instead of stdout
+Tue Mar 30 03:00:32 to 03:21:07 refactor error messages
+Tue Mar 30 21:00:00 to 21:43:26 changed usage messages to use $0 instead of hardcoded filename
+Tue Mar 30 21:43:26 to 22:01:42 finished girt-add basic functionality
+Tue Mar 30 22:01:42 to 22:18:00 made commands more robust with --
+Tue Mar 30 22:18:00 to 23:57:29 created more files in .girt/ when girt-init is ran
+Thu Apr 01 17:30:00 to 18:01:57 made girt-add create a blob for each file
+Thu Apr 01 18:01:57 to 18:12:42 add all file permissions to index on girt-add instead of user's read permissions only
+Thu Apr 01 18:12:42 to 18:31:14 made master the default branch on girt-init
+Thu Apr 01 21:00:00 to 21:18:55 assume user won't modify .girt/ files
+Thu Apr 01 21:18:55 to 21:31:18 finish girt-commit functionality, yet to add option parsing
+Thu Apr 01 21:31:18 to 23:48:04 finished girt-log
+Thu Apr 01 23:48:04 to 23:55:46 fixed typo
+Fri Apr 02 23:55:46 to 00:42:07 add functionality to girt-add removed files to remove them from the repo
+Fri Apr 02 00:42:07 to 00:48:09 tidied up
+Fri Apr 02 00:48:09 to 01:05:42 added argument parsing for girt-commit
+Fri Apr 02 01:05:42 to 01:15:37 fixed order of usage error checking
+Fri Apr 02 01:15:37 to 02:12:36 finished girt-show
+Fri Apr 02 16:30:00 to 17:01:02 major refactor and bugfixes - don't reset index on girt-add
+Fri Apr 02 17:01:02 to 17:05:51 remove unnecessary quotes
+Fri Apr 02 17:05:51 to 17:07:24 revert previous change, add double quotes
+Fri Apr 02 17:08:03 to 17:10:24 replace echo with printf
+Fri Apr 02 17:10:24 to 17:12:53 fixed bug in girt-log where double digit log numbers not printed in correct order
+Fri Apr 02 17:12:53 to 17:35:38 added subset1 -a processing for girt-commit and also fixed a bug
+Fri Apr 02 19:30:00 to 19:55:00 small fixes
+Fri Apr 02 19:55:00 to 20:02:11 fixed error messages
+Fri Apr 02 20:02:11 to 22:58:05 tidied up girt-add
+Fri Apr 02 22:58:05 to 23:15:07 tidied up girt-commit
+Fri Apr 02 23:15:07 to 23:29:30 tidied up girt-log
+Fri Apr 02 23:29:30 to 23:46:29 tidied up girt-show
+Sat Apr 03 18:00:00 to 18:41:19 removed unnecessary quotes
+Sat Apr 03 18:41:19 to 19:52:23 finished girt-status
+Sat Apr 03 19:52:23 to 21:36:52 finished girt-rm
+Sat Apr 03 21:36:52 to 21:55:53 changed some comments
+Sat Apr 03 21:55:53 to 22:02:59 added -- to rm in girt-rm for safety
+Sat Apr 03 22:02:59 to 22:04:38 added optimisation to girt-status to not process files that already have been processed
+Sat Apr 03 22:04:38 to 22:32:22 renamed variables to more suitable name
+Sat Apr 03 22:32:22 to 22:41:37 started girt-branch, still need to implement functionality to delete a branch
+Sun Apr 04 00:30:00 to 01:02:57 bugfixes
+Sun Apr 04 01:02:57 to 01:44:37 rename variables
+Sun Apr 04 01:44:37 to 01:47:41 made girt-log print commits for only current branch instead of all commits
+Sun Apr 04 01:47:41 to 01:58:26 added branch delete functionality in girt-branch
+Sun Apr 04 19:00:00 to 19:51:34 finished girt-checkout
+Sun Apr 04 19:51:34 to 20:05:45 better way of listing branches
+Sun Apr 04 20:05:45 to 20:54:09 girt-checkout error checking bugfixes
+Mon Apr 05 06:21:29 to 09:22:56 girt-checkout bugfixes
+Mon Apr 05 09:22:56 to 09:52:41 simple error checking done for girt-merge
+Mon Apr 05 22:40:00 to 22:46:55 rename files and add empty test files
+Tue Apr 06 22:46:55 to 01:07:04 finished test00
+Tue Apr 06 01:07:04 to 01:49:11 finished test01, refined test00
+Tue Apr 06 01:49:11 to 02:03:28 finished test02, refined test00 and test01
+Tue Apr 06 02:03:28 to 02:38:55 finished test03
+Tue Apr 06 02:38:55 to 02:47:16 finished test04
+Tue Apr 06 02:47:16 to 03:24:33 finished test05, refined test02
+Tue Apr 06 03:24:33 to 03:26:22 refined test05
+Tue Apr 06 03:26:22 to 04:08:14 finished test06
+Tue Apr 06 04:08:14 to 04:48:10 specify girt-status sort order
+Tue Apr 06 04:48:10 to 04:48:47 added to test06
+Tue Apr 06 04:48:47 to 05:19:47 finished test07
+Tue Apr 06 05:19:47 to 05:31:42 fixed girt-status sort order
+Tue Apr 06 05:31:42 to 06:41:12 refined all tests thus far
+Tue Apr 06 06:41:12 to 07:11:08 finished test08
+Tue Apr 06 07:11:08 to 07:45:06 refined test05
+Tue Apr 06 07:45:06 to 07:59:40 finished test09
