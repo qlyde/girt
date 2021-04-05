@@ -104,4 +104,4 @@ if [ -n "$curr_commit" ]; then
 fi
 
 # print status
-cat "$TMP" | sort
+cat "$TMP" | sort -k1
