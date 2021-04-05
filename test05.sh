@@ -93,7 +93,7 @@ girt-commit -m 'This is commit 3' > /dev/null 2>&1
 
 out=$(girt-rm d 2>&1)
 test -z "$out" || failed "test 6 failed: got unexpected output '$out'"
-test ! -e d || failed "test 6 failed: file d was not deleted"
+test ! -e d || failed "test 6 failed: file 'd' was not deleted"
 echo "test 6 passed"
 
 # test 7: success: --cached
@@ -103,7 +103,7 @@ girt-commit -m 'This is commit 4' > /dev/null 2>&1
 
 out=$(girt-rm --cached e 2>&1)
 test -z "$out" || failed "test 7 failed: got unexpected output '$out'"
-test -e e || failed "test 7 failed: file e was deleted with --cached flag"
+test -e e || failed "test 7 failed: file 'e' was deleted with --cached flag"
 echo "test 7 passed"
 
 # test 8: success: staged changes with --cached
@@ -116,8 +116,8 @@ girt-add f > /dev/null 2>&1
 
 out=$(girt-rm --cached f 2>&1)
 test -z "$out" || failed "test 8 failed: got unexpected output '$out'"
-test -e f || failed "test 8 failed: file f was deleted with --cached flag"
-test "$(cat f)" = "hello world" || failed "test 8 failed: file f has incorrect contents"
+test -e f || failed "test 8 failed: file 'f' was deleted with --cached flag"
+test "$(cat f)" = "hello world" || failed "test 8 failed: file 'f' has incorrect contents"
 
 out=$(girt-show :f 2>&1)
 out_status=$?
@@ -135,8 +135,8 @@ echo hello world > g
 
 out=$(girt-rm --cached g 2>&1)
 test -z "$out" || failed "test 9 failed: got unexpected output '$out'"
-test -e g || failed "test 9 failed: file g was deleted with --cached flag"
-test "$(cat g)" = "hello world" || failed "test 9 failed: file g has incorrect contents"
+test -e g || failed "test 9 failed: file 'g' was deleted with --cached flag"
+test "$(cat g)" = "hello world" || failed "test 9 failed: file 'g' has incorrect contents"
 
 out=$(girt-show :g 2>&1)
 out_status=$?
@@ -157,7 +157,7 @@ echo hello world! > h
 
 out=$(girt-rm --force h 2>&1)
 test -z "$out" || failed "test 10 failed: got unexpected output '$out'"
-test ! -e h || failed "test 10 failed: file h was not deleted with --force flag"
+test ! -e h || failed "test 10 failed: file 'h' was not deleted with --force flag"
 
 out=$(girt-show :h 2>&1)
 out_status=$?
