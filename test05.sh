@@ -1,6 +1,6 @@
 #!/bin/dash
 # girt-rm test
-# test 8 and 9 assume girt-show works
+# tests 8,9,10 assume girt-show works
 
 failed() { echo "$@" && exit 1; }
 passed() { echo "all tests passed" && exit 0; }
