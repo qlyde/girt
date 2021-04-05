@@ -60,7 +60,7 @@ echo "test 5 passed"
 # test 6: success: -a flag
 echo new > a
 out=$(girt-commit -a -m m 2>&1)
-out_exp="Committed as commit 1" # incorrect implementation would result in "nothing to commit" as this change was not girt-added
+out_exp="Committed as commit 1" # incorrect implementation would result in "nothing to commit" as this change was not staged
 test "$out" = "$out_exp" || failed "$0: test 6 failed: incorrect output: expected '$out_exp', got '$out'"
 echo "test 6 passed"
 
