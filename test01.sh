@@ -18,6 +18,7 @@ TEST_DIR=".test01"
 [ -e $TEST_DIR ] && rm -rf $TEST_DIR
 PATH=..:$PATH
 mkdir $TEST_DIR && cd $TEST_DIR
+trap 'cd .. && rm -rf "$TEST_DIR"' INT TERM EXIT
 
 # test 1: failure: no .girt directory
 out=$(girt-add 2>&1)
@@ -55,5 +56,4 @@ out=$(girt-add a 2>&1)
 test -z "$out" || failed "$0: test 5 failed: got unexpected output '$out'"
 echo "test 5 passed"
 
-cd .. && rm -rf $TEST_DIR
 passed

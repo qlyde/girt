@@ -9,6 +9,7 @@ TEST_DIR=".test00"
 [ -e $TEST_DIR ] && rm -rf $TEST_DIR
 PATH=..:$PATH
 mkdir $TEST_DIR && cd $TEST_DIR
+trap 'cd .. && rm -rf "$TEST_DIR"' INT TERM EXIT
 
 # test 1: success
 out=$(girt-init 2>&1)
@@ -25,5 +26,4 @@ test $out_status -eq 1 || failed "$0: test 2 failed: exit status 1 expected, got
 echo "$out" | grep -Fq "$out_exp" || failed "$0: test 2 failed: incorrect output: expected '$out_exp', got '$out'"
 echo "test 2 passed"
 
-cd .. && rm -rf $TEST_DIR
 passed
