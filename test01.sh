@@ -1,7 +1,7 @@
 #!/bin/dash
 # girt-add test
 
-failed() { echo "$@" && exit 1; }
+failed() { echo "$0: $@" && exit 1; }
 passed() { echo "all tests passed" && exit 0; }
 
 test_failure() {
@@ -9,8 +9,8 @@ test_failure() {
     out=$2
     out_status=$3
     out_exp=$4
-    test $out_status -eq 1 || failed "$0: test $testno failed: exit status 1 expected, got $out_status"
-    echo "$out" | grep -Fq "$out_exp" || failed "$0: test $testno failed: incorrect output: expected '$out_exp', got '$out'"
+    test $out_status -eq 1 || failed "test $testno failed: exit status 1 expected, got $out_status"
+    echo "$out" | grep -Fq "$out_exp" || failed "test $testno failed: incorrect output: expected '$out_exp', got '$out'"
 }
 
 TEST_DIR=".test01"
@@ -47,13 +47,13 @@ echo "test 3 passed"
 # test 4: success
 touch a
 out=$(girt-add a 2>&1)
-test -z "$out" || failed "$0: test 4 failed: got unexpected output '$out'"
+test -z "$out" || failed "test 4 failed: got unexpected output '$out'"
 echo "test 4 passed"
 
 # test 5: success: adding a removed file
 rm a
 out=$(girt-add a 2>&1)
-test -z "$out" || failed "$0: test 5 failed: got unexpected output '$out'"
+test -z "$out" || failed "test 5 failed: got unexpected output '$out'"
 echo "test 5 passed"
 
 passed

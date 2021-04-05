@@ -1,8 +1,8 @@
 #!/bin/dash
 # girt-branch test
-# test 7 assumes girt-checkout works
+# tests 7,8 assume girt-checkout works
 
-failed() { echo "$@" && exit 1; }
+failed() { echo "$0: $@" && exit 1; }
 passed() { echo "all tests passed" && exit 0; }
 
 test_failure() {
@@ -10,8 +10,8 @@ test_failure() {
     out=$2
     out_status=$3
     out_exp=$4
-    test $out_status -eq 1 || failed "$0: test $testno failed: exit status 1 expected, got $out_status"
-    echo "$out" | grep -Fq "$out_exp" || failed "$0: test $testno failed: incorrect output: expected '$out_exp', got '$out'"
+    test $out_status -eq 1 || failed "test $testno failed: exit status 1 expected, got $out_status"
+    echo "$out" | grep -Fq "$out_exp" || failed "test $testno failed: incorrect output: expected '$out_exp', got '$out'"
 }
 
 TEST_DIR=".test07"
@@ -52,7 +52,7 @@ abc
 b
 bcd
 master"
-test "$out" = "$out_exp" || failed "$0: test 3 failed: incorrect output: expected '$out_exp', got '$out'"
+test "$out" = "$out_exp" || failed "test 3 failed: incorrect output: expected '$out_exp', got '$out'"
 echo "test 3 passed"
 
 # test 4: failure: branch already exists
@@ -91,7 +91,7 @@ echo "test 7 passed"
 # test 8: success: deleting a branch
 out=$(girt-branch -d b 2>&1)
 out_exp="Deleted branch 'b'"
-test "$out" = "$out_exp" || failed "$0: test 8 failed: incorrect output: expected '$out_exp', got '$out'"
+test "$out" = "$out_exp" || failed "test 8 failed: incorrect output: expected '$out_exp', got '$out'"
 
 out=$(girt-checkout b 2>&1)
 out_status=$?

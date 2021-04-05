@@ -1,7 +1,7 @@
 #!/bin/dash
 # girt-status test
 
-failed() { echo "$@" && exit 1; }
+failed() { echo "$0: $@" && exit 1; }
 passed() { echo "all tests passed" && exit 0; }
 
 # delete girt repo and all files
@@ -18,8 +18,8 @@ trap 'cd .. && rm -rf "$TEST_DIR"' INT TERM EXIT
 out=$(girt-status 2>&1)
 out_status=$?
 out_exp="girt repository directory .girt not found"
-test $out_status -eq 1 || failed "$0: test 1 failed: exit status 1 expected, got $out_status"
-echo "$out" | grep -Fq "$out_exp" || failed "$0: test 1 failed: incorrect output: expected '$out_exp', got '$out'"
+test $out_status -eq 1 || failed "test 1 failed: exit status 1 expected, got $out_status"
+echo "$out" | grep -Fq "$out_exp" || failed "test 1 failed: incorrect output: expected '$out_exp', got '$out'"
 echo "test 1 passed"
 
 girt-init > /dev/null 2>&1
@@ -29,7 +29,7 @@ touch untracked_1
 
 out=$(girt-status 2>&1)
 out_exp="untracked_1 - untracked"
-test "$out" = "$out_exp" || failed "$0: test 2 failed: incorrect output: expected '$out_exp', got '$out'"
+test "$out" = "$out_exp" || failed "test 2 failed: incorrect output: expected '$out_exp', got '$out'"
 echo "test 2 passed"
 reset_girt
 
@@ -41,7 +41,7 @@ girt-rm --cached untracked_2 > /dev/null 2>&1
 
 out=$(girt-status 2>&1)
 out_exp="untracked_2 - untracked"
-test "$out" = "$out_exp" || failed "$0: test 3 failed: incorrect output: expected '$out_exp', got '$out'"
+test "$out" = "$out_exp" || failed "test 3 failed: incorrect output: expected '$out_exp', got '$out'"
 echo "test 3 passed"
 reset_girt
 
@@ -54,7 +54,7 @@ echo hello > untracked_3
 
 out=$(girt-status 2>&1)
 out_exp="untracked_3 - untracked"
-test "$out" = "$out_exp" || failed "$0: test 4 failed: incorrect output: expected '$out_exp', got '$out'"
+test "$out" = "$out_exp" || failed "test 4 failed: incorrect output: expected '$out_exp', got '$out'"
 echo "test 4 passed"
 reset_girt
 
@@ -65,7 +65,7 @@ girt-commit -m 0 > /dev/null 2>&1
 
 out=$(girt-status 2>&1)
 out_exp="same_as_repo - same as repo"
-test "$out" = "$out_exp" || failed "$0: test 5 failed: incorrect output: expected '$out_exp', got '$out'"
+test "$out" = "$out_exp" || failed "test 5 failed: incorrect output: expected '$out_exp', got '$out'"
 echo "test 5 passed"
 reset_girt
 
@@ -78,7 +78,7 @@ girt-add changes_staged > /dev/null 2>&1
 
 out=$(girt-status 2>&1)
 out_exp="changes_staged - file changed, changes staged for commit"
-test "$out" = "$out_exp" || failed "$0: test 6 failed: incorrect output: expected '$out_exp', got '$out'"
+test "$out" = "$out_exp" || failed "test 6 failed: incorrect output: expected '$out_exp', got '$out'"
 echo "test 6 passed"
 reset_girt
 
@@ -90,7 +90,7 @@ echo hello > changes_not_staged
 
 out=$(girt-status 2>&1)
 out_exp="changes_not_staged - file changed, changes not staged for commit"
-test "$out" = "$out_exp" || failed "$0: test 7 failed: incorrect output: expected '$out_exp', got '$out'"
+test "$out" = "$out_exp" || failed "test 7 failed: incorrect output: expected '$out_exp', got '$out'"
 echo "test 7 passed"
 reset_girt
 
@@ -104,7 +104,7 @@ echo hello > diff_changes_staged_1 # working same as repo
 
 out=$(girt-status 2>&1)
 out_exp="diff_changes_staged_1 - file changed, different changes staged for commit"
-test "$out" = "$out_exp" || failed "$0: test 8 failed: incorrect output: expected '$out_exp', got '$out'"
+test "$out" = "$out_exp" || failed "test 8 failed: incorrect output: expected '$out_exp', got '$out'"
 echo "test 8 passed"
 reset_girt
 
@@ -118,7 +118,7 @@ echo hello world > diff_changes_staged_2 # working diff to repo
 
 out=$(girt-status 2>&1)
 out_exp="diff_changes_staged_2 - file changed, different changes staged for commit"
-test "$out" = "$out_exp" || failed "$0: test 9 failed: incorrect output: expected '$out_exp', got '$out'"
+test "$out" = "$out_exp" || failed "test 9 failed: incorrect output: expected '$out_exp', got '$out'"
 echo "test 9 passed"
 reset_girt
 
@@ -128,7 +128,7 @@ girt-add added_to_index > /dev/null 2>&1
 
 out=$(girt-status 2>&1)
 out_exp="added_to_index - added to index"
-test "$out" = "$out_exp" || failed "$0: test 10 failed: incorrect output: expected '$out_exp', got '$out'"
+test "$out" = "$out_exp" || failed "test 10 failed: incorrect output: expected '$out_exp', got '$out'"
 echo "test 10 passed"
 reset_girt
 
@@ -139,7 +139,7 @@ echo hello > added_to_index_file_changed
 
 out=$(girt-status 2>&1)
 out_exp="added_to_index_file_changed - added to index, file changed"
-test "$out" = "$out_exp" || failed "$0: test 11 failed: incorrect output: expected '$out_exp', got '$out'"
+test "$out" = "$out_exp" || failed "test 11 failed: incorrect output: expected '$out_exp', got '$out'"
 echo "test 11 passed"
 reset_girt
 
@@ -150,7 +150,7 @@ rm added_to_index_file_deleted
 
 out=$(girt-status 2>&1)
 out_exp="added_to_index_file_deleted - added to index, file deleted"
-test "$out" = "$out_exp" || failed "$0: test 12 failed: incorrect output: expected '$out_exp', got '$out'"
+test "$out" = "$out_exp" || failed "test 12 failed: incorrect output: expected '$out_exp', got '$out'"
 echo "test 12 passed"
 reset_girt
 
@@ -162,7 +162,7 @@ rm file_deleted
 
 out=$(girt-status 2>&1)
 out_exp="file_deleted - file deleted"
-test "$out" = "$out_exp" || failed "$0: test 13 failed: incorrect output: expected '$out_exp', got '$out'"
+test "$out" = "$out_exp" || failed "test 13 failed: incorrect output: expected '$out_exp', got '$out'"
 echo "test 13 passed"
 reset_girt
 
@@ -176,7 +176,7 @@ rm file_deleted_diff_changes_staged
 
 out=$(girt-status 2>&1)
 out_exp="file_deleted_diff_changes_staged - file deleted, different changes staged for commit"
-test "$out" = "$out_exp" || failed "$0: test 14 failed: incorrect output: expected '$out_exp', got '$out'"
+test "$out" = "$out_exp" || failed "test 14 failed: incorrect output: expected '$out_exp', got '$out'"
 echo "test 14 passed"
 reset_girt
 
@@ -188,7 +188,7 @@ girt-rm deleted > /dev/null 2>&1
 
 out=$(girt-status 2>&1)
 out_exp="deleted - deleted"
-test "$out" = "$out_exp" || failed "$0: test 15 failed: incorrect output: expected '$out_exp', got '$out'"
+test "$out" = "$out_exp" || failed "test 15 failed: incorrect output: expected '$out_exp', got '$out'"
 echo "test 15 passed"
 reset_girt
 
@@ -203,7 +203,7 @@ a - untracked
 abc - untracked
 b - untracked
 bcd - untracked"
-test "$out" = "$out_exp" || failed "$0: test 16 failed: incorrect output: expected '$out_exp', got '$out'"
+test "$out" = "$out_exp" || failed "test 16 failed: incorrect output: expected '$out_exp', got '$out'"
 echo "test 16 passed"
 
 passed

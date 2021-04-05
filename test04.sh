@@ -1,7 +1,7 @@
 #!/bin/dash
 # girt-show test
 
-failed() { echo "$@" && exit 1; }
+failed() { echo "$0: $@" && exit 1; }
 passed() { echo "all tests passed" && exit 0; }
 
 test_failure() {
@@ -9,8 +9,8 @@ test_failure() {
     out=$2
     out_status=$3
     out_exp=$4
-    test $out_status -eq 1 || failed "$0: test $testno failed: exit status 1 expected, got $out_status"
-    echo "$out" | grep -Fq "$out_exp" || failed "$0: test $testno failed: incorrect output: expected '$out_exp', got '$out'"
+    test $out_status -eq 1 || failed "test $testno failed: exit status 1 expected, got $out_status"
+    echo "$out" | grep -Fq "$out_exp" || failed "test $testno failed: incorrect output: expected '$out_exp', got '$out'"
 }
 
 TEST_DIR=".test04"
@@ -57,13 +57,13 @@ echo "test 4 passed"
 # test 5: success: commit
 out=$(girt-show 0:a 2>&1)
 out_exp="hello"
-test "$out" = "$out_exp" || failed "$0: test 5 failed: incorrect output: expected '$out_exp', got '$out'"
+test "$out" = "$out_exp" || failed "test 5 failed: incorrect output: expected '$out_exp', got '$out'"
 echo "test 5 passed"
 
 # test 6: success: index
 out=$(girt-show :a 2>&1)
 out_exp="hello"
-test "$out" = "$out_exp" || failed "$0: test 6 failed: incorrect output: expected '$out_exp', got '$out'"
+test "$out" = "$out_exp" || failed "test 6 failed: incorrect output: expected '$out_exp', got '$out'"
 echo "test 6 passed"
 
 # test 7: success: index different from commit
@@ -72,11 +72,11 @@ girt-add a > /dev/null 2>&1
 
 out=$(girt-show :a 2>&1)
 out_exp="hello world"
-test "$out" = "$out_exp" || failed "$0: test 7 failed: incorrect output: expected '$out_exp', got '$out'"
+test "$out" = "$out_exp" || failed "test 7 failed: incorrect output: expected '$out_exp', got '$out'"
 
 out=$(girt-show 0:a 2>&1)
 out_exp="hello"
-test "$out" = "$out_exp" || failed "$0: test 7 failed: incorrect output: expected '$out_exp', got '$out'"
+test "$out" = "$out_exp" || failed "test 7 failed: incorrect output: expected '$out_exp', got '$out'"
 
 echo "test 7 passed"
 
@@ -85,11 +85,11 @@ girt-commit -m 'This is commit 1' > /dev/null 2>&1
 
 out=$(girt-show 0:a 2>&1)
 out_exp="hello"
-test "$out" = "$out_exp" || failed "$0: test 8 failed: incorrect output: expected '$out_exp', got '$out'"
+test "$out" = "$out_exp" || failed "test 8 failed: incorrect output: expected '$out_exp', got '$out'"
 
 out=$(girt-show 1:a 2>&1)
 out_exp="hello world"
-test "$out" = "$out_exp" || failed "$0: test 8 failed: incorrect output: expected '$out_exp', got '$out'"
+test "$out" = "$out_exp" || failed "test 8 failed: incorrect output: expected '$out_exp', got '$out'"
 
 echo "test 8 passed"
 
