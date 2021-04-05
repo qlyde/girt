@@ -190,5 +190,20 @@ out=$(girt-status 2>&1)
 out_exp="deleted - deleted"
 test "$out" = "$out_exp" || failed "$0: test 15 failed: incorrect output: expected '$out_exp', got '$out'"
 echo "test 15 passed"
+reset_girt
+
+# test 16: success: order of files
+touch 1 10 2 20 a abc b bcd
+out=$(girt-status 2>&1)
+out_exp="1 - untracked
+10 - untracked
+2 - untracked
+20 - untracked
+a - untracked
+abc - untracked
+b - untracked
+bcd - untracked"
+test "$out" = "$out_exp" || failed "$0: test 16 failed: incorrect output: expected '$out_exp', got '$out'"
+echo "test 16 passed"
 
 passed
